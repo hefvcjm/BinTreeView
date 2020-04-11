@@ -47,17 +47,21 @@ void view_tree(const T& tree, vector<T*> highlight_nodes={}){
     queue<pair<int, const NodeType*>> q;
     int i = 0;
     q.push(make_pair(i, &tree));
-    dot_string << i << " [label=\"" << tree.val << "\" group=" << i << "];";
+    dot_string << i << " [label=\"" << tree.val << "\"];";
     auto placeholder = [&i, &dot_string, &q](){
         i++;
-        dot_string << i << " [group=2, label=\"\", width=0, style=invis];";
+        dot_string << i << " [label=\"\", width=0, style=invis];";
         dot_string << q.front().first << " -> " << i << " [style=invis];";
     };
     while(!q.empty()){
+        if(q.front().second->left == NULL && q.front().second->right == NULL){
+            q.pop();
+            continue;
+        }
         if(q.front().second->left){
             i++;
             q.push(make_pair(i, q.front().second->left));
-            dot_string << i << " [label=\"" << q.front().second->left->val << "\" group=" << i << "];";
+            dot_string << i << " [label=\"" << q.front().second->left->val << "\"];";
             if(find(highlight_nodes.begin(),highlight_nodes.end(), q.front().second->left) != highlight_nodes.end()){
                 dot_string << i << " " << highlight_format;
             }
@@ -69,7 +73,7 @@ void view_tree(const T& tree, vector<T*> highlight_nodes={}){
         if(q.front().second->right){
             i++;
             q.push(make_pair(i, q.front().second->right));
-            dot_string << i << " [label=\"" << q.front().second->right->val << "\" group=" << i << "];";
+            dot_string << i << " [label=\"" << q.front().second->right->val << "\"];";
             if(find(highlight_nodes.begin(),highlight_nodes.end(), q.front().second->right) != highlight_nodes.end()){
                 dot_string << i << " " << highlight_format;
             }
