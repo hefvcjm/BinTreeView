@@ -38,6 +38,7 @@ int main(int argc, char const *argv[])
     queue<BinTree*> q;
     q.push(&tree);
     int n = 20;
+    vector<BinTree*> highlight_nodes;
     for(int i = 0; i < n; i++){
         if(!q.empty()){
             q.front()->left = new BinTree(rand() % 200);
@@ -47,10 +48,14 @@ int main(int argc, char const *argv[])
             }
             q.push(q.front()->left);
             q.push(q.front()->right);
+            if(rand() % 5 == 0){
+                highlight_nodes.push_back(q.front());
+            }
         }
         q.pop();
     }
     view_tree<BinTree>(tree);
+    view_tree<BinTree>(tree, highlight_nodes);
     return 0;
 }
 
