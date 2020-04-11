@@ -39,7 +39,7 @@ void view_dot_graph(const char *dot_string);
  * @param highlight_nodes: tree node pointers which will be highlight
  */
 template<typename T>
-void view_tree(const T& tree, vector<T*> highlight_nodes){
+void view_tree(const T& tree, vector<T*> highlight_nodes={}){
     using NodeType = T;
     string highlight_format = "[shape=box, style=filled, fillcolor=red];";
     stringstream dot_string;
