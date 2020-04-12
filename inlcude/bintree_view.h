@@ -82,8 +82,6 @@ void view_tree(const T& tree, vector<T*> highlight_nodes={}){
                 dot_string << i << " " << highlight_format;
             }
             dot_string << q.front().first << " -> " << i << ";";
-        }else{
-            placeholder();
         }
         q.pop();
     }
