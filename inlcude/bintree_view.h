@@ -43,14 +43,18 @@ void view_tree(const T& tree, vector<T*> highlight_nodes={}){
     using NodeType = T;
     string highlight_format = "[shape=box, style=filled, fillcolor=red];";
     stringstream dot_string;
-    dot_string << "digraph graphname { node [shape=box]; " << "graph [nodesep=0.2];" << "edge [arrowhead=vee];";
+    dot_string << "digraph graphname { node [shape=box]; " << "edge [arrowhead=vee];";
     queue<pair<int, const NodeType*>> q;
     int i = 0;
     q.push(make_pair(i, &tree));
     dot_string << i << " [label=\"" << tree.val << "\"];";
-    auto placeholder = [&i, &dot_string, &q](){
+    auto placeholder = [&i, &dot_string, &q](int group=-1){
         i++;
-        dot_string << i << " [label=\"\", width=0, style=invis];";
+        if(group != -1){
+            dot_string << i << " [label=\"\", width=0.1, style=invis, group=" << group << "];";
+        }else{
+            dot_string << i << " [label=\"\", width=0.1, style=invis];";
+        }
         dot_string << q.front().first << " -> " << i << " [style=invis];";
     };
     while(!q.empty()){
@@ -61,7 +65,7 @@ void view_tree(const T& tree, vector<T*> highlight_nodes={}){
         if(q.front().second->left){
             i++;
             q.push(make_pair(i, q.front().second->left));
-            dot_string << i << " [label=\"" << q.front().second->left->val << "\"];";
+            dot_string << i << " [label=\"" << q.front().second->left->val << "\" group=" << i << "];";
             if(find(highlight_nodes.begin(),highlight_nodes.end(), q.front().second->left) != highlight_nodes.end()){
                 dot_string << i << " " << highlight_format;
             }
@@ -69,11 +73,11 @@ void view_tree(const T& tree, vector<T*> highlight_nodes={}){
         }else{
             placeholder();
         }
-        placeholder();
+        placeholder(q.front().first);
         if(q.front().second->right){
             i++;
             q.push(make_pair(i, q.front().second->right));
-            dot_string << i << " [label=\"" << q.front().second->right->val << "\"];";
+            dot_string << i << " [label=\"" << q.front().second->right->val << "\" group=" << i << "];";
             if(find(highlight_nodes.begin(),highlight_nodes.end(), q.front().second->right) != highlight_nodes.end()){
                 dot_string << i << " " << highlight_format;
             }
